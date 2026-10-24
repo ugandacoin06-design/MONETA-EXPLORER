@@ -39,9 +39,11 @@ export function Dashboard() {
       >
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
         
-        <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-4">
-          MONETA <span className="text-blue-400">Explorer</span>
-        </h1>
+        <div className="mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
+            MONETA <span className="text-blue-400">Explorer</span>
+          </h1>
+        </div>
         <p className="text-slate-400 max-w-2xl text-lg mb-8">
           The hybrid consortium blockchain for transparent and secure enterprise operations. Search the public and consortium chains instantly.
         </p>

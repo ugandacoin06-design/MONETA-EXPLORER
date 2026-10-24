@@ -125,7 +125,7 @@ export function Layout() {
             </form>
           </div>
 
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-3 md:gap-5">
             {/* Role Demo Switcher */}
             <div className="hidden sm:flex items-center gap-2">
               <span className="text-xs text-slate-500 uppercase tracking-widest font-medium">Demo Role:</span>

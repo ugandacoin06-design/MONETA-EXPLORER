@@ -4,9 +4,9 @@ import { Vote, FileText, CheckCircle, XCircle } from 'lucide-react';
 import { GOVERNANCE_PROPOSALS } from '../data/mockData';
 
 export function Governance() {
-  const [votedProposals, setVotedProposals] = useState<Record<number, string>>({});
+  const [votedProposals, setVotedProposals] = useState<Record<string | number, string>>({});
 
-  const handleVote = (id: number, vote: string) => {
+  const handleVote = (id: string | number, vote: string) => {
     setVotedProposals(prev => ({ ...prev, [id]: vote }));
   };
 

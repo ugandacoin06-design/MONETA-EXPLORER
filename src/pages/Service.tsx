@@ -10,11 +10,11 @@ import {
   Server, 
   ShieldCheck, 
   Check, 
-  Minus,
-  Search,
-  Zap,
-  Lock,
-  Layers,
+  Minus, 
+  Search, 
+  Zap, 
+  Lock, 
+  Layers, 
   LayoutDashboard
 } from 'lucide-react';
 
@@ -28,7 +28,7 @@ export function Service() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
+          className="max-w-4xl mx-auto flex flex-col items-center"
         >
           <h1 className="text-sm font-bold tracking-widest text-blue-500 uppercase mb-8">Moneta Explorer</h1>
           <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-6 leading-tight">
@@ -42,11 +42,11 @@ export function Service() {
             From public blockchain verification to authorized private network activity, MONETA Explorer is designed to give every participant the right information, at the right level of access.<br /><br />
             <span className="text-white font-medium">Explore the network. Verify the truth. Protect what matters.</span>
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/explorer" className="px-8 py-3.5 bg-white text-slate-900 font-bold text-sm tracking-wide rounded-lg hover:bg-slate-200 transition-colors">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link to="/explorer" className="w-full sm:w-auto px-8 py-3.5 bg-white text-slate-900 font-bold text-sm tracking-wide rounded-lg hover:bg-slate-200 transition-colors">
               EXPLORE MONETA CHAIN
             </Link>
-            <Link to="/access" className="px-8 py-3.5 bg-slate-900 border border-slate-700 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-slate-800 transition-colors">
+            <Link to="/access" className="w-full sm:w-auto px-8 py-3.5 bg-slate-900 border border-slate-700 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-slate-800 transition-colors">
               CONNECT WALLET
             </Link>
           </div>
@@ -423,11 +423,11 @@ export function Service() {
           <p className="text-2xl font-bold text-white tracking-widest mb-4 uppercase">VISIBLE TRUTH. INVISIBLE WEALTH.</p>
           <p className="text-slate-400 mb-12 font-medium tracking-wide">MONETA EXPLORER - YOUR WINDOW INTO MONETA CHAIN.</p>
           
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link to="/explorer" className="px-8 py-3.5 bg-emerald-600 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-900/20">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <Link to="/explorer" className="w-full sm:w-auto px-8 py-3.5 bg-emerald-600 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-emerald-500 transition-colors shadow-lg shadow-emerald-900/20">
               START EXPLORING →
             </Link>
-            <Link to="/access" className="px-8 py-3.5 bg-slate-800 border border-slate-700 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-slate-700 transition-colors">
+            <Link to="/access" className="w-full sm:w-auto px-8 py-3.5 bg-slate-800 border border-slate-700 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-slate-700 transition-colors">
               CONNECT WALLET →
             </Link>
           </div>

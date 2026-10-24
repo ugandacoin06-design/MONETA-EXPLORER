@@ -26,7 +26,9 @@ export function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-sm font-bold tracking-widest text-blue-500 uppercase mb-8">Moneta Explorer</h1>
+          <div className="flex flex-col items-center">
+            <h1 className="text-sm font-bold tracking-widest text-blue-500 uppercase mb-8">Moneta Explorer</h1>
+          </div>
           <h2 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-8">
             VISIBLE TRUTH.<br/>
             <span className="text-slate-500">INVISIBLE WEALTH.</span>
@@ -38,11 +40,11 @@ export function Home() {
             MONETA Explorer is the official window into MONETA Chain—giving the world a clear view of network activity, blocks, transactions, validators, and blockchain integrity while respecting the privacy of the people and organizations using the network.<br/><br/>
             See the truth of the chain without exposing what should remain private.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/explorer" className="px-8 py-3.5 bg-white text-slate-900 font-bold text-sm tracking-wide rounded-lg hover:bg-slate-200 transition-colors">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link to="/explorer" className="w-full sm:w-auto px-8 py-3.5 bg-white text-slate-900 font-bold text-sm tracking-wide rounded-lg hover:bg-slate-200 transition-colors">
               EXPLORE MONETA CHAIN
             </Link>
-            <Link to="/access" className="px-8 py-3.5 bg-slate-900 border border-slate-700 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-slate-800 transition-colors">
+            <Link to="/access" className="w-full sm:w-auto px-8 py-3.5 bg-slate-900 border border-slate-700 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-slate-800 transition-colors">
               CONNECT WALLET
             </Link>
           </div>
@@ -251,9 +253,14 @@ export function Home() {
           </p>
           <p className="text-slate-400 mb-8 font-medium">Welcome to MONETA Explorer.</p>
           
-          <Link to="/explorer" className="inline-block px-10 py-4 bg-blue-600 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-blue-500 transition-colors shadow-lg shadow-blue-900/20">
-            EXPLORE NOW
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link to="/explorer" className="w-full sm:w-auto px-10 py-4 bg-blue-600 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-blue-500 transition-colors shadow-lg shadow-blue-900/20">
+              EXPLORE NOW
+            </Link>
+            <Link to="/access" className="w-full sm:w-auto px-10 py-4 bg-slate-900 border border-slate-700 text-white font-bold text-sm tracking-wide rounded-lg hover:bg-slate-800 transition-colors">
+              CONNECT WALLET
+            </Link>
+          </div>
         </div>
       </div>
     </div>
