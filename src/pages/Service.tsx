@@ -25,7 +25,7 @@ export function Service() {
       <div className="text-center max-w-4xl mx-auto pt-6 space-y-6">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#15171A] border border-[#202328] text-xs font-mono text-[#A7ADB5]">
           <span className="w-1.5 h-1.5 rounded-full bg-[#1677FF]"></span>
-          <span>MONETASCAN · SERVICE ARCHITECTURE</span>
+          <span>MONETASCAN · SERVICE ARCHITECTURE & EAAS</span>
         </div>
 
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight">
@@ -44,16 +44,17 @@ export function Service() {
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <Link
-            to="/explorer"
-            className="px-6 py-2.5 bg-[#1677FF] hover:bg-[#1366DB] text-white font-semibold text-xs tracking-wider uppercase rounded-lg transition-colors"
+            to="/eaas"
+            className="px-6 py-2.5 bg-[#1677FF] hover:bg-[#1366DB] text-white font-semibold text-xs tracking-wider uppercase rounded-lg transition-colors flex items-center gap-2"
           >
-            Explore MONETA Chain
+            <Layers className="w-4 h-4" />
+            <span>Launch EaaS Platform</span>
           </Link>
           <Link
-            to="/access"
+            to="/explorer"
             className="px-6 py-2.5 bg-[#15171A] hover:bg-[#202328] border border-[#202328] text-white font-semibold text-xs tracking-wider uppercase rounded-lg transition-colors"
           >
-            Connect Wallet
+            Public Explorer
           </Link>
         </div>
       </div>

@@ -10,17 +10,18 @@ import {
   Settings, 
   Bell, 
   User, 
-  Menu,
-  X,
-  BarChart2,
-  Users,
-  FileText,
-  Globe,
-  Home,
-  BookOpen,
-  Search,
-  Coins,
-  Code
+  Menu, 
+  X, 
+  BarChart2, 
+  Users, 
+  FileText, 
+  Globe, 
+  Home, 
+  BookOpen, 
+  Search, 
+  Coins, 
+  Code,
+  Layers
 } from 'lucide-react';
 import { cn } from '../utils';
 import { useRole, Role } from '../context/RoleContext';
@@ -59,6 +60,7 @@ export function Layout() {
     { name: 'Addresses', path: '/addresses', icon: Wallet },
     { name: 'Validators', path: '/validators', icon: ShieldCheck },
     { name: 'Network Analytics', path: '/analytics', icon: BarChart2 },
+    { name: 'EaaS Platform', path: '/eaas', icon: Layers },
     { name: 'Developer Spec', path: '/developers', icon: Code },
     { name: 'Service', path: '/service', icon: BookOpen },
     { name: 'Ecosystem', path: '/ecosystem', icon: Globe },
@@ -173,6 +175,16 @@ export function Layout() {
                 <option value="admin">Admin</option>
               </select>
             </div>
+
+            {/* EaaS Customer Console Link */}
+            <Link
+              to="/eaas/dashboard"
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#1677FF]/15 border border-[#1677FF]/30 text-[#1677FF] hover:bg-[#1677FF]/25 text-xs font-semibold font-mono transition-colors"
+              title="Explorer as a Service Customer Platform"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>EaaS Console</span>
+            </Link>
 
             <Link 
               to="/notifications" 
