@@ -1,17 +1,26 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
 import { ShieldAlert, Download, FileText, Search } from 'lucide-react';
 import { useRole } from '../context/RoleContext';
+import { Link } from 'react-router-dom';
 
 export function AuditLogs() {
   const { role } = useRole();
+  const [filterQuery, setFilterQuery] = useState('');
 
   if (role !== 'auditor' && role !== 'admin') {
     return (
-      <div className="flex flex-col items-center justify-center h-64">
-        <ShieldAlert className="w-12 h-12 text-slate-500 mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
-        <p className="text-slate-400">This area is restricted to Auditors and Admins.</p>
+      <div className="flex flex-col items-center justify-center p-12 bg-[#15171A] border border-[#202328] rounded-xl text-center max-w-lg mx-auto">
+        <ShieldAlert className="w-10 h-10 text-[#EF4444] mb-3" />
+        <h2 className="text-base font-bold text-white mb-1">Auditor Credentials Required</h2>
+        <p className="text-xs text-[#A7ADB5] mb-4">
+          Regulatory audit logs and forensic records are restricted to Auditor or Admin roles.
+        </p>
+        <Link
+          to="/access"
+          className="px-4 py-2 bg-[#1677FF] hover:bg-[#1366DB] text-white text-xs font-semibold rounded-lg transition-colors"
+        >
+          Select Auditor Role
+        </Link>
       </div>
     );
   }
@@ -20,63 +29,86 @@ export function AuditLogs() {
     { id: 'AL-0912', timestamp: '2026-05-24 12:45:11', actor: 'Admin (0x99...a1f)', action: 'Updated Privacy Policy', status: 'Success' },
     { id: 'AL-0911', timestamp: '2026-05-24 11:30:22', actor: 'Member Node Alpha', action: 'Exported Transaction History', status: 'Success' },
     { id: 'AL-0910', timestamp: '2026-05-24 10:15:05', actor: 'Unknown (0x12...b99)', action: 'Failed Login Attempt', status: 'Failed' },
-    { id: 'AL-0909', timestamp: '2026-05-24 09:00:00', actor: 'System', action: 'Consensus Phase Switch (PoA -> PoS)', status: 'Success' },
+    { id: 'AL-0909', timestamp: '2026-05-24 09:00:00', actor: 'System', action: 'Consensus Phase Commit (PBFT Invariant Check)', status: 'Success' },
     { id: 'AL-0908', timestamp: '2026-05-23 16:20:41', actor: 'Member Node Beta', action: 'Changed Privacy Settings (Global Hide)', status: 'Success' },
   ];
 
+  const filteredLogs = logs.filter(l => 
+    l.actor.toLowerCase().includes(filterQuery.toLowerCase()) || 
+    l.action.toLowerCase().includes(filterQuery.toLowerCase()) ||
+    l.id.toLowerCase().includes(filterQuery.toLowerCase())
+  );
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#202328] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">System Audit Logs</h1>
-          <p className="text-slate-400 text-sm">Chronological record of consortium actions for compliance and forensics.</p>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs uppercase tracking-widest text-[#8A38F5] font-semibold">Regulatory Compliance</span>
+            <span className="text-[#A7ADB5]">·</span>
+            <span className="text-xs text-[#A7ADB5] font-mono">Immutable Audit Trail</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+            <FileText className="w-7 h-7 text-[#1677FF]" />
+            System Audit Logs
+          </h1>
+          <p className="text-sm text-[#A7ADB5] mt-1">
+            Cryptographic forensic logs of consortium actions, administrative events, and state mutations.
+          </p>
         </div>
         <div className="flex gap-2">
-           <button className="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm font-medium text-slate-300 hover:text-white transition-colors">
-            <Download className="w-4 h-4" />
-            Export CSV
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium text-white transition-colors">
-            <FileText className="w-4 h-4" />
-            Generate Compliance PDF
+          <button 
+            type="button"
+            onClick={() => {
+              const csv = "log_id,timestamp,actor,action,status\n" + logs.map(l => `${l.id},${l.timestamp},${l.actor},${l.action},${l.status}`).join("\n");
+              const blob = new Blob([csv], { type: 'text/csv' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'audit_logs.csv';
+              a.click();
+            }}
+            className="flex items-center gap-2 px-3 py-1.5 bg-[#15171A] border border-[#202328] rounded-lg text-xs font-semibold text-white hover:bg-[#202328] transition-colors"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Export CSV</span>
           </button>
         </div>
       </div>
 
-       <div className="flex items-center gap-2 p-2 bg-slate-900/50 border border-slate-800 rounded-lg">
-          <Search className="w-5 h-5 text-slate-500 ml-2" />
-          <input 
-            type="text" 
-            placeholder="Search by actor, action, or ID..." 
-            className="bg-transparent border-none focus:outline-none text-slate-200 w-full text-sm placeholder-slate-600"
-          />
-       </div>
+      <div className="flex items-center gap-2 p-2 bg-[#15171A] border border-[#202328] rounded-lg">
+        <Search className="w-4 h-4 text-[#5D646E] ml-2" />
+        <input 
+          type="text" 
+          value={filterQuery}
+          onChange={(e) => setFilterQuery(e.target.value)}
+          placeholder="Filter audit logs by actor, action, or ID..." 
+          className="bg-transparent border-none focus:outline-none text-white w-full text-xs placeholder-[#5D646E]"
+        />
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl bg-slate-900/50 border border-slate-800 overflow-hidden"
-      >
+      <div className="rounded-xl bg-[#15171A] border border-[#202328] overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 text-sm text-slate-500 bg-slate-900/80">
-                <th className="p-4 font-medium">Log ID</th>
-                <th className="p-4 font-medium">Timestamp (UTC)</th>
-                <th className="p-4 font-medium">Actor</th>
-                <th className="p-4 font-medium">Action Description</th>
-                <th className="p-4 font-medium">Status</th>
+              <tr className="border-b border-[#202328] text-[#A7ADB5] bg-[#0E1012] font-semibold uppercase tracking-wider">
+                <th className="p-4">Log ID</th>
+                <th className="p-4">Timestamp (UTC)</th>
+                <th className="p-4">Actor</th>
+                <th className="p-4">Action Description</th>
+                <th className="p-4 text-right">Status</th>
               </tr>
             </thead>
-            <tbody>
-              {logs.map((log, idx) => (
-                <tr key={idx} className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
-                  <td className="p-4 font-mono text-xs text-slate-400">{log.id}</td>
-                  <td className="p-4 text-sm text-slate-300 whitespace-nowrap">{log.timestamp}</td>
-                  <td className="p-4 text-sm font-medium text-blue-400">{log.actor}</td>
-                  <td className="p-4 text-sm text-slate-200">{log.action}</td>
-                  <td className="p-4">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${log.status === 'Success' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
+            <tbody className="divide-y divide-[#202328]/60 font-mono">
+              {filteredLogs.map((log) => (
+                <tr key={log.id} className="hover:bg-[#191C21] transition-colors">
+                  <td className="p-4 text-[#A7ADB5]">{log.id}</td>
+                  <td className="p-4 text-white whitespace-nowrap">{log.timestamp}</td>
+                  <td className="p-4 text-[#1677FF] font-sans">{log.actor}</td>
+                  <td className="p-4 text-white font-sans">{log.action}</td>
+                  <td className="p-4 text-right font-sans">
+                    <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${log.status === 'Success' ? 'bg-[#10B981]/15 text-[#10B981]' : 'bg-[#EF4444]/15 text-[#EF4444]'}`}>
                       {log.status}
                     </span>
                   </td>
@@ -85,10 +117,7 @@ export function AuditLogs() {
             </tbody>
           </table>
         </div>
-        <div className="p-4 border-t border-slate-800 flex items-center justify-center text-sm">
-           <button className="text-blue-400 hover:text-blue-300 font-medium disabled:opacity-50 transition-colors">Load More Logs</button>
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

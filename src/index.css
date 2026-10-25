@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-canvas: #050505;
+    --bg-surface: #15171A;
+    --bg-surface-hover: #1c1f24;
+    --border-color: #202328;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A7ADB5;
+    --accent-blue: #1677FF;
+  }
+
+  body {
+    background-color: #050505;
+    color: #FFFFFF;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom scrollbar for sleek minimal dark mode */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #202328;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2c3138;
+}

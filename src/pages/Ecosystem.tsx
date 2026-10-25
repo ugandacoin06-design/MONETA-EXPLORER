@@ -1,93 +1,87 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { ExternalLink, Database, Link as LinkIcon, Globe } from 'lucide-react';
+import { ExternalLink, Database, Link as LinkIcon, Globe, ShieldCheck } from 'lucide-react';
 
 export function Ecosystem() {
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight mb-2">MONETA EXPLORER</h1>
-        <p className="text-xl text-blue-400 font-medium mb-4">EXPLORE THE MONETA ECOSYSTEM</p>
-        <p className="text-slate-400 max-w-3xl leading-relaxed">
-          MONETA Explorer is the official window into the MONETA blockchain, providing visibility into the network and its on-chain activity.
+    <div className="space-y-8 pb-12">
+      {/* Header */}
+      <div className="border-b border-[#202328] pb-6">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xs uppercase tracking-widest text-[#1677FF] font-semibold">Infrastructure Network</span>
+          <span className="text-[#A7ADB5]">·</span>
+          <span className="text-xs text-[#A7ADB5] font-mono">Consortium Hub</span>
+        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+          <Globe className="w-7 h-7 text-[#1677FF]" />
+          MONETA Ecosystem
+        </h1>
+        <p className="text-sm text-[#A7ADB5] mt-1 max-w-2xl">
+          The sovereign blockchain infrastructure, oracle integrations, and connected digital economy services powering the MONETA network.
         </p>
       </div>
 
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-          <Globe className="w-6 h-6 text-emerald-400" />
-          MONETA ECOSYSTEM
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 flex flex-col h-full hover:border-blue-500/30 transition-colors"
-          >
-            <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6">
-              <Database className="w-6 h-6 text-blue-400" />
+      {/* Ecosystem Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* MONETA CHAIN Card with Official Website Link */}
+        <div className="p-6 md:p-8 rounded-xl bg-[#15171A] border border-[#202328] flex flex-col justify-between hover:border-[#1677FF]/50 transition-colors">
+          <div>
+            <div className="w-10 h-10 rounded-lg bg-[#1677FF]/15 border border-[#1677FF]/30 flex items-center justify-center mb-5 text-[#1677FF]">
+              <Database className="w-5 h-5" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-3">MONETA CHAIN</h3>
-            <p className="text-slate-400 mb-8 flex-1">
-              The blockchain infrastructure powering the MONETA ecosystem.
+            <h2 className="text-xl font-bold text-white mb-2">MONETA CHAIN</h2>
+            <p className="text-xs text-[#A7ADB5] leading-relaxed mb-6">
+              The foundational hybrid consortium blockchain infrastructure powering high-throughput enterprise transactions, sovereign governance, and privacy-preserving smart contract execution.
             </p>
-            <div className="flex flex-col gap-2">
-              <a 
-                href="https://moneta-chain.vercel.app/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm w-fit transition-all shadow-lg shadow-blue-900/20 group"
-              >
-                <span>VISIT MONETA CHAIN</span>
-                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-              <span className="text-xs text-blue-400 font-mono flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                https://moneta-chain.vercel.app/
-              </span>
-            </div>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="p-8 rounded-2xl bg-slate-900/50 border border-slate-800 flex flex-col h-full hover:border-emerald-500/30 transition-colors"
-          >
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6">
-              <LinkIcon className="w-6 h-6 text-emerald-400" />
+          <div className="pt-4 border-t border-[#202328] space-y-2">
+            <a 
+              href="https://moneta-chain.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#1677FF] hover:bg-[#1366DB] text-white font-semibold text-xs transition-colors group"
+            >
+              <span>Visit Official MONETA Chain Website</span>
+              <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </a>
+            <div className="text-[11px] font-mono text-[#A7ADB5] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+              <span>https://moneta-chain.vercel.app/</span>
             </div>
-            <h3 className="text-xl font-bold text-white mb-3">MONETA ORACLE</h3>
-            <p className="text-slate-400 mb-8 flex-1">
-              The data and oracle infrastructure connecting trusted information with the MONETA ecosystem.
+          </div>
+        </div>
+
+        {/* MONETA ORACLE Card */}
+        <div className="p-6 md:p-8 rounded-xl bg-[#15171A] border border-[#202328] flex flex-col justify-between hover:border-[#202328] transition-colors">
+          <div>
+            <div className="w-10 h-10 rounded-lg bg-[#202328] flex items-center justify-center mb-5 text-[#10B981]">
+              <LinkIcon className="w-5 h-5" />
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">MONETA ORACLE</h2>
+            <p className="text-xs text-[#A7ADB5] leading-relaxed mb-6">
+              Decentralized oracle infrastructure delivering verified real-world market feeds, foreign exchange rates, and cryptographic proofs to MONETA consortium contracts.
             </p>
-            <div className="flex flex-col gap-1">
-              <button className="flex items-center gap-2 text-sm font-medium text-emerald-400 hover:text-emerald-300 w-fit transition-colors cursor-not-allowed opacity-70">
-                VISIT MONETA ORACLE <ExternalLink className="w-4 h-4" />
-              </button>
-              <p className="text-xs text-slate-500">Official link coming soon.</p>
+          </div>
+
+          <div className="pt-4 border-t border-[#202328] space-y-2">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#202328] text-[#5D646E] text-xs font-semibold cursor-not-allowed">
+              <span>Oracle Gateway Coming Soon</span>
+            </span>
+            <div className="text-[11px] font-mono text-[#5D646E]">
+              Official deployment in preparation by consortium validators
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="mt-12 p-8 rounded-2xl bg-slate-900/80 border border-slate-800 text-center relative overflow-hidden"
-      >
-        <div className="absolute top-0 right-1/2 translate-x-1/2 -mt-10 w-96 h-20 bg-blue-500/10 blur-2xl rounded-full" />
-        <h3 className="text-sm font-bold text-blue-400 mb-2 uppercase tracking-widest">OFFICIAL ECOSYSTEM LINKS</h3>
-        <p className="text-xl font-bold text-white mb-3">MONETA CHAIN | MONETA ORACLE</p>
-        <p className="text-sm text-slate-400 max-w-xl mx-auto mb-6">
-          Official website links will be added once they are released by the MONETA team.
+      {/* Ecosystem Architecture Footnote */}
+      <div className="p-6 rounded-xl bg-[#0E1012] border border-[#202328] text-center space-y-2">
+        <span className="text-[10px] font-mono uppercase tracking-widest text-[#1677FF] font-semibold">Consortium Infrastructure</span>
+        <h3 className="text-base font-bold text-white">ONE ECOSYSTEM. CONNECTED INFRASTRUCTURE.</h3>
+        <p className="text-xs text-[#A7ADB5] max-w-lg mx-auto">
+          MONETASCAN acts as the universal verification layer across all current and future MONETA network components.
         </p>
-        <div className="inline-block px-6 py-2 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 tracking-widest uppercase">
-          ONE ECOSYSTEM. CONNECTED INFRASTRUCTURE.
-        </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

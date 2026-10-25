@@ -6,6 +6,8 @@ import { Blocks } from './pages/Blocks';
 import { BlockDetail } from './pages/BlockDetail';
 import { Transactions } from './pages/Transactions';
 import { TransactionDetail } from './pages/TransactionDetail';
+import { Tokens } from './pages/Tokens';
+import { Developers } from './pages/Developers';
 import { Validators } from './pages/Validators';
 import { NetworkOverview } from './pages/NetworkOverview';
 import { Governance } from './pages/Governance';
@@ -39,12 +41,15 @@ export default function App() {
           <Route path="blocks/:id" element={<BlockDetail />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="transactions/:hash" element={<TransactionDetail />} />
+          <Route path="tokens" element={<Tokens />} />
+          <Route path="tokens/:symbol" element={<Tokens />} />
           <Route path="addresses" element={<Addresses />} />
           <Route path="addresses/:address" element={<AddressDetail />} />
           <Route path="validators" element={<Validators />} />
           <Route path="governance" element={<Governance />} />
           <Route path="network" element={<NetworkOverview />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="developers" element={<Developers />} />
           <Route path="settings" element={<Settings />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="access" element={<AccessRole />} />

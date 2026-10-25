@@ -1,173 +1,182 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Box, ArrowLeft, Clock, ShieldCheck, Database, Layers } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Box, ArrowLeft, Clock, ShieldCheck, Database, Layers, Copy, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LATEST_BLOCKS, LATEST_TRANSACTIONS } from '../data/mockData';
 import { formatHash, formatNumber } from '../utils';
 
 export function BlockDetail() {
   const { id } = useParams<{ id: string }>();
-  const height = parseInt(id || '0', 10);
+  const height = parseInt(id || '1459203', 10);
+  const [copiedHash, setCopiedHash] = useState(false);
   
-  // Find block or generate a mock one based on ID
+  // Find block or generate deterministic mock details
   const block = LATEST_BLOCKS.find(b => b.height === height) || {
     height,
-    hash: `0x${Math.random().toString(16).substring(2, 14)}...${Math.random().toString(16).substring(2, 6)}`,
-    txCount: Math.floor(Math.random() * 200) + 10,
-    validator: 'MonetaNode-04',
-    size: `${Math.floor(Math.random() * 50) + 10} KB`,
-    time: '2 mins ago',
-    status: 'confirmed'
+    hash: `0x3f5ca982e041e48f729bb9c4a896d8e23f044d08129a738c8241b712c7519a2b`,
+    txCount: 142,
+    validator: 'MonetaNode-01',
+    size: '25.4 KB',
+    time: '12s ago',
+    timestamp: '2026-05-24 12:46:12 UTC',
+    gasUsed: '1,248,910',
+    gasLimit: '15,000,000',
+    status: 'confirmed' as const
+  };
+
+  const handleCopyHash = () => {
+    navigator.clipboard.writeText(block.hash);
+    setCopiedHash(true);
+    setTimeout(() => setCopiedHash(false), 2000);
   };
 
   return (
     <div className="space-y-6">
+      {/* Header and Back Link */}
       <div>
-        <Link to="/blocks" className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-2 mb-4 w-fit">
-          <ArrowLeft className="w-4 h-4" /> Back to Blocks
+        <Link to="/blocks" className="text-xs font-medium text-[#1677FF] hover:underline flex items-center gap-1.5 mb-3 w-fit">
+          <ArrowLeft className="w-3.5 h-3.5" /> Back to Blocks
         </Link>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <Box className="w-6 h-6 text-blue-400" />
-          Block #{formatNumber(block.height)}
-        </h1>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#202328] pb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+            <Box className="w-7 h-7 text-[#1677FF]" />
+            Block #{formatNumber(block.height)}
+          </h1>
+
+          {/* Quick Prev / Next Navigator */}
+          <div className="flex items-center gap-2">
+            <Link
+              to={`/blocks/${height - 1}`}
+              className="px-3 py-1.5 rounded bg-[#15171A] hover:bg-[#202328] border border-[#202328] text-xs font-mono text-[#A7ADB5] hover:text-white flex items-center gap-1 transition-colors"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" /> Prev
+            </Link>
+            <Link
+              to={`/blocks/${height + 1}`}
+              className="px-3 py-1.5 rounded bg-[#15171A] hover:bg-[#202328] border border-[#202328] text-xs font-mono text-[#A7ADB5] hover:text-white flex items-center gap-1 transition-colors"
+            >
+              Next <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl overflow-hidden"
-          >
-            <div className="px-6 py-4 border-b border-slate-800">
-              <h2 className="text-lg font-semibold text-white">Block Properties</h2>
-            </div>
-            <div className="divide-y divide-slate-800/50">
-              <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <span className="text-slate-500 w-32 shrink-0">Block Height:</span>
-                <span className="text-white font-medium">{formatNumber(block.height)}</span>
-              </div>
-              <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <span className="text-slate-500 w-32 shrink-0">Block Hash:</span>
-                <span className="text-slate-300 font-mono break-all">{block.hash}</span>
-              </div>
-              <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <span className="text-slate-500 w-32 shrink-0">Timestamp:</span>
-                <span className="text-slate-300 flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-slate-500" />
-                  {block.time} (May 24, 2026 12:45:00 UTC)
-                </span>
-              </div>
-              <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <span className="text-slate-500 w-32 shrink-0">Validator:</span>
-                <span className="text-blue-400 font-medium flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4" />
-                  {block.validator}
-                </span>
-              </div>
-              <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <span className="text-slate-500 w-32 shrink-0">Transactions:</span>
-                <span className="text-slate-300">{block.txCount} transactions internally</span>
-              </div>
-              <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <span className="text-slate-500 w-32 shrink-0">Size:</span>
-                <span className="text-slate-300">{block.size}</span>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl overflow-hidden"
-          >
-            <div className="px-6 py-4 border-b border-slate-800 flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-white">Transactions</h2>
-              <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Showing first 5</span>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-900/50 border-b border-slate-800 text-xs uppercase tracking-wider text-slate-500 font-medium">
-                    <th className="px-6 py-4">Hash</th>
-                    <th className="px-6 py-4">From</th>
-                    <th className="px-6 py-4">To</th>
-                    <th className="px-6 py-4 text-right">Value</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/50">
-                  {LATEST_TRANSACTIONS.slice(0, 5).map((tx) => (
-                    <tr key={tx.hash} className="hover:bg-white/5 transition-colors group">
-                      <td className="px-6 py-4 font-mono text-sm">
-                        <Link to={`/transactions/${tx.hash}`} className="text-blue-400 hover:text-blue-300">
-                          {formatHash(tx.hash)}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-mono text-slate-400">{formatHash(tx.from)}</td>
-                      <td className="px-6 py-4 text-sm font-mono text-slate-400">{formatHash(tx.to)}</td>
-                      <td className="px-6 py-4 text-sm text-white font-medium text-right">{tx.amount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
+      {/* Block Information Card */}
+      <div className="bg-[#15171A] border border-[#202328] rounded-xl overflow-hidden">
+        <div className="px-6 py-4 bg-[#0E1012] border-b border-[#202328] flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-white">Block Properties</h2>
+          <span className="text-xs text-[#10B981] font-mono flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+            Finalized Block
+          </span>
         </div>
 
-        <div className="space-y-6">
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-6"
-          >
-            <h3 className="text-sm font-medium text-slate-400 mb-4 uppercase tracking-widest">Navigation</h3>
-            <div className="flex items-center gap-4">
-              <Link 
-                to={`/blocks/${height - 1}`} 
-                className="flex-1 py-2 text-center bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors"
+        <div className="divide-y divide-[#202328]/60 text-xs">
+          <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <span className="text-[#A7ADB5] font-medium">Block Height:</span>
+            <span className="md:col-span-3 text-white font-mono font-bold text-sm">
+              #{formatNumber(block.height)}
+            </span>
+          </div>
+
+          <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <span className="text-[#A7ADB5] font-medium">Cryptographic Hash:</span>
+            <div className="md:col-span-3 flex items-center gap-2 font-mono text-white break-all">
+              <span>{block.hash}</span>
+              <button
+                type="button"
+                onClick={handleCopyHash}
+                className="text-[#1677FF] hover:underline shrink-0 text-xs"
               >
-                &larr; Prev Block
-              </Link>
-              <Link 
-                to={`/blocks/${height + 1}`} 
-                className="flex-1 py-2 text-center bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-400 rounded-lg text-sm transition-colors"
-              >
-                Next Block &rarr;
+                {copiedHash ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+          </div>
+
+          <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <span className="text-[#A7ADB5] font-medium">Timestamp:</span>
+            <span className="md:col-span-3 text-[#A7ADB5] flex items-center gap-2 font-mono">
+              <Clock className="w-3.5 h-3.5 text-[#5D646E]" />
+              {block.timestamp} ({block.time})
+            </span>
+          </div>
+
+          <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <span className="text-[#A7ADB5] font-medium">Proposing Validator:</span>
+            <div className="md:col-span-3 flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded bg-[#202328] text-white font-mono">
+                {block.validator}
+              </span>
+              <Link to="/validators" className="text-[#1677FF] hover:underline text-xs">
+                Inspect Validator &rarr;
               </Link>
             </div>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-6"
-          >
-            <h3 className="text-sm font-medium text-slate-400 mb-4 uppercase tracking-widest">Network Info</h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                  <Database className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-white">Status</div>
-                  <div className="text-xs text-emerald-400 flex items-center gap-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div> Confirmed
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
-                  <Layers className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-white">Chain Data</div>
-                  <div className="text-xs text-slate-400">Consortium A</div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          </div>
+
+          <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <span className="text-[#A7ADB5] font-medium">Transactions:</span>
+            <span className="md:col-span-3 text-white font-mono">
+              {block.txCount} transactions verified in this block
+            </span>
+          </div>
+
+          <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <span className="text-[#A7ADB5] font-medium">Gas Usage / Limit:</span>
+            <span className="md:col-span-3 text-white font-mono">
+              {block.gasUsed} / {block.gasLimit} ({(1248910 / 15000000 * 100).toFixed(1)}%)
+            </span>
+          </div>
+
+          <div className="px-6 py-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <span className="text-[#A7ADB5] font-medium">Payload Size:</span>
+            <span className="md:col-span-3 text-[#A7ADB5] font-mono">
+              {block.size}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Transactions in this Block */}
+      <div className="bg-[#15171A] border border-[#202328] rounded-xl overflow-hidden">
+        <div className="px-6 py-3.5 bg-[#0E1012] border-b border-[#202328] flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-white">Transactions in Block #{block.height}</h2>
+          <span className="text-xs text-[#A7ADB5] font-mono">Displaying verified batch</span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="bg-[#0A0C0E] border-b border-[#202328] text-[#A7ADB5] uppercase tracking-wider font-semibold">
+                <th className="px-5 py-3">Tx Hash</th>
+                <th className="px-5 py-3">From</th>
+                <th className="px-5 py-3">To</th>
+                <th className="px-5 py-3 text-right">Value</th>
+                <th className="px-5 py-3 text-right">Fee</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#202328]/60 font-mono">
+              {LATEST_TRANSACTIONS.map((tx) => (
+                <tr key={tx.hash} className="hover:bg-[#191C21] transition-colors">
+                  <td className="px-5 py-3.5">
+                    <Link to={`/transactions/${tx.hash}`} className="text-[#1677FF] hover:underline font-semibold">
+                      {formatHash(tx.hash)}
+                    </Link>
+                  </td>
+                  <td className="px-5 py-3.5 text-[#A7ADB5]">
+                    {formatHash(tx.from)}
+                  </td>
+                  <td className="px-5 py-3.5 text-[#A7ADB5]">
+                    {formatHash(tx.to)}
+                  </td>
+                  <td className="px-5 py-3.5 text-right text-white font-semibold">
+                    {tx.amount}
+                  </td>
+                  <td className="px-5 py-3.5 text-right text-[#A7ADB5]">
+                    {tx.fee}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -1,109 +1,145 @@
 import React, { useState } from 'react';
-import { User, Shield, CheckCircle, Eye, EyeOff } from 'lucide-react';
-import { motion } from 'motion/react';
+import { User, Shield, CheckCircle, Eye, EyeOff, Wallet, Check } from 'lucide-react';
+import { useRole, Role } from '../context/RoleContext';
 
 export function AccessRole() {
-  const [connected, setConnected] = useState(true);
+  const { role, setRole } = useRole();
+  const [connected, setConnected] = useState(role !== 'public');
+
+  const handleToggleConnect = () => {
+    if (connected) {
+      setConnected(false);
+      setRole('public');
+    } else {
+      setConnected(true);
+      setRole('member');
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <User className="w-6 h-6 text-blue-400" />
-          Access & Roles Dashboard
+      {/* Header */}
+      <div className="border-b border-[#202328] pb-6">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xs uppercase tracking-widest text-[#1677FF] font-semibold">Access Management</span>
+          <span className="text-[#A7ADB5]">·</span>
+          <span className="text-xs text-[#A7ADB5] font-mono">Role Credentials</span>
+        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+          <User className="w-7 h-7 text-[#1677FF]" />
+          Access & Roles Control
         </h1>
-        <p className="text-slate-400 text-sm mt-1">Manage your identity and permissions on the MONETA hybrid chain.</p>
+        <p className="text-sm text-[#A7ADB5] mt-1">
+          Configure demo identity, wallet connection, and role-based viewing permissions across the MONETA ecosystem.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-1 border border-blue-500/30 bg-blue-900/10 backdrop-blur-md rounded-2xl p-8 flex flex-col items-center text-center relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl" />
-          
-          <div className="w-20 h-20 rounded-full bg-slate-900 border-4 border-blue-500 flex items-center justify-center mb-4 z-10 transition-colors">
-            <User className={`w-10 h-10 ${connected ? 'text-slate-300' : 'text-slate-600'}`} />
+        {/* Wallet / Session Card */}
+        <div className="lg:col-span-1 border border-[#202328] bg-[#15171A] rounded-xl p-6 flex flex-col items-center text-center">
+          <div className="w-16 h-16 rounded-full bg-[#202328] border-2 border-[#1677FF] flex items-center justify-center mb-4">
+            <Wallet className="w-8 h-8 text-[#1677FF]" />
           </div>
-          <h2 className="text-xl font-bold text-white mb-1 z-10">{connected ? 'Consortium Admin' : 'Guest'}</h2>
-          <p className="text-slate-400 text-sm mb-4 z-10">{connected ? 'Alex Node Operator' : 'No Wallet Connected'}</p>
+          <h2 className="text-lg font-bold text-white mb-1 capitalize">
+            {role === 'public' ? 'Public Visitor' : `${role} Session`}
+          </h2>
+          <p className="text-xs text-[#A7ADB5] mb-4 font-mono">
+            {role === 'public' ? 'Unauthenticated Mode' : '0x71C8360537aaC1bFa199C96dd3007049Abf1973E'}
+          </p>
           
-          {connected ? (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-8 z-10">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div> Connected
-            </div>
-          ) : (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 text-xs font-semibold uppercase tracking-wider mb-8 z-10">
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-400"></div> Disconnected
-            </div>
-          )}
+          <div className="mb-6">
+            {role !== 'public' ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#10B981]/15 text-[#10B981] text-xs font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+                Wallet Connected
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#202328] text-[#A7ADB5] text-xs font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#5D646E]"></span>
+                Not Connected
+              </span>
+            )}
+          </div>
 
           <button 
-            onClick={() => setConnected(!connected)}
-            className={`w-full py-2.5 rounded-lg font-medium transition-colors border z-10 ${connected ? 'bg-slate-800 hover:bg-slate-700 text-white border-slate-700' : 'bg-blue-600 hover:bg-blue-700 text-white border-blue-500'}`}>
-            {connected ? 'Disconnect Wallet' : 'Connect Wallet'}
+            type="button"
+            onClick={handleToggleConnect}
+            className={`w-full py-2.5 rounded-lg text-xs font-semibold transition-colors ${
+              role !== 'public' 
+                ? 'bg-[#202328] hover:bg-[#2A2E35] text-white' 
+                : 'bg-[#1677FF] hover:bg-[#1366DB] text-white'
+            }`}
+          >
+            {role !== 'public' ? 'Disconnect Demo Session' : 'Simulate Wallet Connection'}
           </button>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="lg:col-span-2 space-y-6"
-        >
-          <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-6 md:p-8">
-            <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-              <Shield className="w-5 h-5 text-blue-400" /> Current Role & Access
+        {/* Roles Selector & Matrix */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-[#15171A] border border-[#202328] rounded-xl p-6">
+            <h2 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <Shield className="w-4 h-4 text-[#1677FF]" /> 
+              Switch Simulated Role
             </h2>
             
-            <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 transition-opacity ${connected ? 'opacity-100' : 'opacity-40'}`}>
-              <div className="p-4 rounded-xl border-2 border-blue-500 bg-blue-900/20">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-blue-300">Validator</span>
-                  <CheckCircle className="w-5 h-5 text-blue-400" />
-                </div>
-                <p className="text-xs text-blue-200/70">Can propose blocks and participate in consensus.</p>
-              </div>
-              <div className="p-4 rounded-xl border-2 border-purple-500 bg-purple-900/20">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-purple-300">Consortium Member</span>
-                  <CheckCircle className="w-5 h-5 text-purple-400" />
-                </div>
-                <p className="text-xs text-purple-200/70">Can vote on governance and view private chain data.</p>
-              </div>
-              <div className="p-4 rounded-xl border border-slate-700 bg-slate-800/50 opacity-50">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-slate-300">Super Admin</span>
-                  <div className="w-5 h-5 rounded-full border-2 border-slate-600" />
-                </div>
-                <p className="text-xs text-slate-400">Can add/remove members from consortium.</p>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+              {[
+                { r: 'public', title: 'Public Visitor', desc: 'Browse public blocks, transactions, and validator records without account.' },
+                { r: 'member', title: 'Consortium Member', desc: 'Authorized wallet with decrypted balances and transaction records.' },
+                { r: 'validator', title: 'Validator Node', desc: 'Consensus monitoring, node proposing access, and operational health metrics.' },
+                { r: 'auditor', title: 'Regulatory Auditor', desc: 'Access compliance-level cryptographic verification and aggregate summaries.' },
+              ].map(item => (
+                <button
+                  key={item.r}
+                  type="button"
+                  onClick={() => {
+                    setRole(item.r as Role);
+                    setConnected(item.r !== 'public');
+                  }}
+                  className={`p-3.5 rounded-lg border text-left transition-all ${
+                    role === item.r 
+                      ? 'border-[#1677FF] bg-[#1677FF]/10' 
+                      : 'border-[#202328] bg-[#0E1012] hover:border-[#343A43]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-semibold text-white text-xs">{item.title}</span>
+                    {role === item.r && <Check className="w-4 h-4 text-[#1677FF]" />}
+                  </div>
+                  <p className="text-[11px] text-[#A7ADB5] leading-relaxed">{item.desc}</p>
+                </button>
+              ))}
             </div>
 
-            <h3 className="text-sm font-medium text-slate-400 mb-4 uppercase tracking-widest">What You Can View</h3>
-            <div className={`space-y-3 transition-opacity ${connected ? 'opacity-100' : 'opacity-40'}`}>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
-                <span className="text-slate-300 text-sm font-medium flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-blue-400" /> Public Chain Data
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#A7ADB5] mb-3">
+              Role Permission Inspection
+            </h3>
+            <div className="space-y-2 text-xs">
+              <div className="flex items-center justify-between p-3 rounded bg-[#0E1012] border border-[#202328]">
+                <span className="text-white flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-[#1677FF]" /> Public Chain Data (Blocks & Txns)
                 </span>
-                <span className="text-emerald-400 font-mono text-xs">Granted</span>
+                <span className="text-[#10B981] font-mono">Granted</span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700">
-                <span className="text-slate-300 text-sm font-medium flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-blue-400" /> Consortium Chain A (Payments)
+              <div className="flex items-center justify-between p-3 rounded bg-[#0E1012] border border-[#202328]">
+                <span className="text-white flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-[#1677FF]" /> Decrypted Balances & Token Holdings
                 </span>
-                <span className="text-emerald-400 font-mono text-xs">Granted</span>
+                <span className={`font-mono ${role !== 'public' ? 'text-[#10B981]' : 'text-[#5D646E]'}`}>
+                  {role !== 'public' ? 'Granted' : 'Shielded'}
+                </span>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-900/50 opacity-60 text-slate-400">
-                <span className="text-sm font-medium flex items-center gap-2">
-                  <EyeOff className="w-4 h-4" /> Consortium Chain B (Identity)
+              <div className="flex items-center justify-between p-3 rounded bg-[#0E1012] border border-[#202328]">
+                <span className="text-white flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-[#1677FF]" /> Validator Operational Telemetry
                 </span>
-                <span className="font-mono text-xs">Restricted</span>
+                <span className={`font-mono ${['validator', 'admin'].includes(role) ? 'text-[#10B981]' : 'text-[#5D646E]'}`}>
+                  {['validator', 'admin'].includes(role) ? 'Granted' : 'Limited'}
+                </span>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

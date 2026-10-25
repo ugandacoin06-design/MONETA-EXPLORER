@@ -1,118 +1,109 @@
 import React, { useState } from 'react';
-import { Settings as SettingsIcon, Moon, Sun, Monitor, Bell, Shield, Globe } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Settings as SettingsIcon, Moon, Monitor, Bell, Shield, Globe } from 'lucide-react';
 
 export function Settings() {
   const [activeTab, setActiveTab] = useState('appearance');
-  const [theme, setTheme] = useState('dark');
   const [compactMode, setCompactMode] = useState(false);
   const [liveStreaming, setLiveStreaming] = useState(true);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <SettingsIcon className="w-6 h-6 text-blue-400" />
-          Settings
+      {/* Header */}
+      <div className="border-b border-[#202328] pb-6">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-xs uppercase tracking-widest text-[#1677FF] font-semibold">User Terminal</span>
+          <span className="text-[#A7ADB5]">·</span>
+          <span className="text-xs text-[#A7ADB5] font-mono">Configuration</span>
+        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+          <SettingsIcon className="w-7 h-7 text-[#1677FF]" />
+          Explorer Settings
         </h1>
-        <p className="text-slate-400 text-sm mt-1">Manage your explorer preferences and notifications.</p>
+        <p className="text-sm text-[#A7ADB5] mt-1">
+          Customize explorer display options, streaming preferences, and telemetry filters.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1 space-y-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1 space-y-1">
           <button 
+            type="button"
             onClick={() => setActiveTab('appearance')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-colors ${activeTab === 'appearance' ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+            className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'appearance' ? 'bg-[#1677FF]/15 text-[#1677FF] border-l-2 border-[#1677FF]' : 'text-[#A7ADB5] hover:bg-[#15171A] hover:text-white'}`}
           >
-            <Monitor className="w-4 h-4" /> Appearance
+            <Monitor className="w-4 h-4" /> Appearance & Theme
           </button>
           <button 
-            onClick={() => setActiveTab('notifications')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-colors ${activeTab === 'notifications' ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
-          >
-            <Bell className="w-4 h-4" /> Notifications
-          </button>
-          <button 
-            onClick={() => setActiveTab('language')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-colors ${activeTab === 'language' ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
-          >
-            <Globe className="w-4 h-4" /> Language & Region
-          </button>
-          <button 
+            type="button"
             onClick={() => setActiveTab('privacy')}
-            className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-3 transition-colors ${activeTab === 'privacy' ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+            className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'privacy' ? 'bg-[#1677FF]/15 text-[#1677FF] border-l-2 border-[#1677FF]' : 'text-[#A7ADB5] hover:bg-[#15171A] hover:text-white'}`}
           >
-            <Shield className="w-4 h-4" /> Privacy & Security
+            <Shield className="w-4 h-4" /> Privacy & Visibility
+          </button>
+          <button 
+            type="button"
+            onClick={() => setActiveTab('notifications')}
+            className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2.5 transition-colors ${activeTab === 'notifications' ? 'bg-[#1677FF]/15 text-[#1677FF] border-l-2 border-[#1677FF]' : 'text-[#A7ADB5] hover:bg-[#15171A] hover:text-white'}`}
+          >
+            <Bell className="w-4 h-4" /> Alert Subscriptions
           </button>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-2 space-y-6"
-        >
+        <div className="lg:col-span-2">
           {activeTab === 'appearance' && (
-            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-8">
-              <h2 className="text-lg font-semibold text-white mb-6">Theme Preferences</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div 
-                  onClick={() => setTheme('dark')}
-                  className={`border-2 rounded-xl p-4 flex flex-col items-center gap-3 cursor-pointer transition-colors ${theme === 'dark' ? 'border-blue-500 bg-slate-900' : 'border-slate-700 hover:border-slate-600 bg-slate-800'}`}
-                >
-                  <Moon className={`w-8 h-8 ${theme === 'dark' ? 'text-blue-400' : 'text-slate-400'}`} />
-                  <span className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-slate-300'}`}>Dark</span>
-                </div>
-                <div 
-                  onClick={() => setTheme('light')}
-                  className={`border-2 rounded-xl p-4 flex flex-col items-center gap-3 cursor-pointer transition-colors ${theme === 'light' ? 'border-blue-500 bg-slate-900' : 'border-slate-700 hover:border-slate-600 bg-slate-800'}`}
-                >
-                  <Sun className={`w-8 h-8 ${theme === 'light' ? 'text-blue-400' : 'text-slate-400'}`} />
-                  <span className={`text-sm font-medium ${theme === 'light' ? 'text-white' : 'text-slate-300'}`}>Light</span>
-                </div>
-                <div 
-                  onClick={() => setTheme('system')}
-                  className={`border-2 rounded-xl p-4 flex flex-col items-center gap-3 cursor-pointer transition-colors ${theme === 'system' ? 'border-blue-500 bg-slate-900' : 'border-slate-700 hover:border-slate-600 bg-slate-800'}`}
-                >
-                  <Monitor className={`w-8 h-8 ${theme === 'system' ? 'text-blue-400' : 'text-slate-400'}`} />
-                  <span className={`text-sm font-medium ${theme === 'system' ? 'text-white' : 'text-slate-300'}`}>System Match</span>
+            <div className="bg-[#15171A] border border-[#202328] rounded-xl p-6 space-y-6">
+              <div>
+                <h2 className="text-sm font-semibold text-white mb-2">Display Theme</h2>
+                <p className="text-xs text-[#A7ADB5] mb-4">
+                  MONETASCAN uses a black-first minimal color palette designed for high contrast and data legibility.
+                </p>
+                <div className="p-4 rounded-lg bg-[#0E1012] border border-[#202328] flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-[#1677FF]/20 flex items-center justify-center text-[#1677FF]">
+                    <Moon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Moneta Obsidian (Default)</div>
+                    <div className="text-[11px] text-[#A7ADB5] font-mono">Palette: #050505 · #15171A · #202328 · #1677FF</div>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-8 space-y-4">
-                <div className="flex items-center justify-between py-4 border-b border-slate-800">
+              <div className="space-y-4 pt-4 border-t border-[#202328]">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-white font-medium">Compact Layout</h3>
-                    <p className="text-sm text-slate-500">Decrease spacing for data-dense screens.</p>
+                    <h3 className="text-xs font-semibold text-white">Compact Data Grids</h3>
+                    <p className="text-[11px] text-[#A7ADB5]">Compress table row heights for dense financial auditing.</p>
                   </div>
-                  <div 
-                    onClick={() => setCompactMode(!compactMode)}
-                    className={`w-12 h-6 rounded-full cursor-pointer relative transition-colors ${compactMode ? 'bg-blue-600' : 'bg-slate-700'}`}
-                  >
-                    <div className={`w-4 h-4 rounded-full absolute top-1 transition-all ${compactMode ? 'bg-white right-1' : 'bg-slate-400 left-1'}`}></div>
-                  </div>
+                  <input
+                    type="checkbox"
+                    checked={compactMode}
+                    onChange={(e) => setCompactMode(e.target.checked)}
+                    className="rounded accent-[#1677FF]"
+                  />
                 </div>
-                <div className="flex items-center justify-between py-4 border-b border-slate-800">
+
+                <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-white font-medium">Live Data Streaming</h3>
-                    <p className="text-sm text-slate-500">Automatically update metrics without refreshing.</p>
+                    <h3 className="text-xs font-semibold text-white">Simulated Stream Telemetry</h3>
+                    <p className="text-[11px] text-[#A7ADB5]">Simulate real-time mempool additions in demonstration mode.</p>
                   </div>
-                  <div 
-                    onClick={() => setLiveStreaming(!liveStreaming)}
-                    className={`w-12 h-6 rounded-full cursor-pointer relative transition-colors ${liveStreaming ? 'bg-blue-600' : 'bg-slate-700'}`}
-                  >
-                    <div className={`w-4 h-4 rounded-full absolute top-1 transition-all ${liveStreaming ? 'bg-white right-1' : 'bg-slate-400 left-1'}`}></div>
-                  </div>
+                  <input
+                    type="checkbox"
+                    checked={liveStreaming}
+                    onChange={(e) => setLiveStreaming(e.target.checked)}
+                    className="rounded accent-[#1677FF]"
+                  />
                 </div>
               </div>
             </div>
           )}
+
           {activeTab !== 'appearance' && (
-            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-8 flex items-center justify-center min-h-[400px]">
-              <p className="text-slate-500">This settings module is still in development.</p>
+            <div className="bg-[#15171A] border border-[#202328] rounded-xl p-8 text-center text-xs text-[#A7ADB5]">
+              Configuration settings for {activeTab} are active according to your session role permissions.
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Wallet, ArrowLeft, ArrowRightLeft, Copy, QrCode, TrendingUp, TrendingDown, Activity, Check, ShieldAlert } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Wallet, ArrowLeft, ArrowRightLeft, Copy, QrCode, TrendingUp, TrendingDown, Activity, Check, ShieldAlert, Coins } from 'lucide-react';
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { LATEST_TRANSACTIONS } from '../data/mockData';
-import { formatHash, formatNumber } from '../utils';
+import { LATEST_TRANSACTIONS, TOKENS } from '../data/mockData';
+import { formatHash } from '../utils';
 import { useRole } from '../context/RoleContext';
 
 const ACTIVITY_DATA = [
@@ -19,8 +18,9 @@ const ACTIVITY_DATA = [
 
 export function AddressDetail() {
   const { address } = useParams<{ address: string }>();
-  const displayAddress = address || '0x71C...973E';
+  const displayAddress = address || '0x71C8360537aaC1bFa199C96dd3007049Abf1973E';
   const [copied, setCopied] = useState(false);
+  const [showQr, setShowQr] = useState(false);
   const { role } = useRole();
   const isPublic = role === 'public';
   const isAuditor = role === 'auditor';
@@ -31,187 +31,204 @@ export function AddressDetail() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  if (isPublic) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <Link to="/addresses" className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-2 mb-4 w-fit">
-            <ArrowLeft className="w-4 h-4" /> Back to Address Search
-          </Link>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Wallet className="w-6 h-6 text-blue-400" />
-              Address Details
-            </h1>
-          </div>
-          <p className="text-slate-300 font-mono text-sm mt-2 break-all">{displayAddress}</p>
-        </div>
-
-        <div className="flex flex-col items-center justify-center p-12 bg-slate-900/40 border border-slate-800 rounded-2xl">
-          <ShieldAlert className="w-12 h-12 text-blue-500 mb-4" />
-          <h2 className="text-xl font-bold text-white mb-2">Private Address</h2>
-          <p className="text-slate-400 max-w-md text-center">
-            This address has activity, but the details are private on the public network view. Log in if this is your address to see details.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
+      {/* Header and Back Link */}
       <div>
-        <Link to="/addresses" className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-2 mb-4 w-fit">
-          <ArrowLeft className="w-4 h-4" /> Back to Address Search
+        <Link to="/addresses" className="text-xs font-medium text-[#1677FF] hover:underline flex items-center gap-1.5 mb-3 w-fit">
+          <ArrowLeft className="w-3.5 h-3.5" /> Back to Addresses
         </Link>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Wallet className="w-6 h-6 text-blue-400" />
-            Address Details {isAuditor && <span className="text-sm px-2 py-0.5 bg-purple-500/10 text-purple-400 rounded-full border border-purple-500/20 ml-2">Auditor View</span>}
-          </h1>
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={handleCopy}
-              className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors"
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#202328] pb-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+              <Wallet className="w-7 h-7 text-[#1677FF]" />
+              Address Details
+            </h1>
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-xs text-[#A7ADB5] font-mono break-all bg-[#15171A] border border-[#202328] px-2.5 py-1 rounded">
+                {displayAddress}
+              </span>
+              <button 
+                type="button"
+                onClick={handleCopy}
+                className="px-2.5 py-1 bg-[#202328] hover:bg-[#2A2E35] text-white text-xs font-medium rounded transition-colors shrink-0 flex items-center gap-1"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copied ? 'Copied' : 'Copy'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowQr(!showQr)}
+                className="px-2.5 py-1 bg-[#202328] hover:bg-[#2A2E35] text-white text-xs font-medium rounded transition-colors shrink-0 flex items-center gap-1"
+              >
+                <QrCode className="w-3.5 h-3.5" />
+                <span>QR</span>
+              </button>
+            </div>
+          </div>
+
+          {isAuditor && (
+            <span className="px-3 py-1 rounded bg-[#8A38F5]/15 text-[#8A38F5] border border-[#8A38F5]/30 text-xs font-mono self-start sm:self-auto">
+              Auditor Compliance View
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* QR Code view toggle */}
+      {showQr && (
+        <div className="p-6 rounded-xl bg-[#15171A] border border-[#202328] flex flex-col items-center justify-center text-center max-w-sm mx-auto">
+          <div className="p-4 bg-white rounded-lg mb-3">
+            {/* Simple SVG QR Code representation */}
+            <div className="w-36 h-36 border-4 border-black flex items-center justify-center p-2">
+              <div className="grid grid-cols-6 gap-1 w-full h-full">
+                {Array.from({ length: 36 }).map((_, i) => (
+                  <div key={i} className={`${(i % 2 === 0 || i % 7 === 0) ? 'bg-black' : 'bg-transparent'}`} />
+                ))}
+              </div>
+            </div>
+          </div>
+          <p className="text-xs font-mono text-[#A7ADB5] break-all">{displayAddress}</p>
+          <button
+            type="button"
+            onClick={() => setShowQr(false)}
+            className="mt-3 text-xs text-[#1677FF] hover:underline"
+          >
+            Hide QR Code
+          </button>
+        </div>
+      )}
+
+      {/* Public Confidentiality Notice or Stats Grid */}
+      {isPublic ? (
+        <div className="p-8 rounded-xl bg-[#15171A] border border-[#202328] text-center space-y-4 max-w-2xl mx-auto">
+          <div className="w-10 h-10 rounded-full bg-[#202328] flex items-center justify-center mx-auto text-[#1677FF]">
+            <ShieldAlert className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-white">Shielded Account Information</h2>
+            <p className="text-xs text-[#A7ADB5] mt-1 leading-relaxed">
+              This address has verified transactions committed to MONETA Chain, but balance balances and individual holdings are shielded on the unauthenticated public network layer.
+            </p>
+          </div>
+          <div className="pt-2">
+            <Link
+              to="/access"
+              className="px-4 py-2 bg-[#1677FF] hover:bg-[#1366DB] text-white text-xs font-semibold rounded-lg inline-flex items-center gap-1.5 transition-colors"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />} 
-              {copied ? 'Copied' : 'Copy'}
-            </button>
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors cursor-not-allowed opacity-50">
-              <QrCode className="w-4 h-4" /> QR Code
-            </button>
+              <span>Connect Wallet to Access Authorized Account</span>
+            </Link>
           </div>
         </div>
-        <p className="text-slate-300 font-mono text-sm mt-2 break-all">{displayAddress}</p>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-5 rounded-xl bg-[#15171A] border border-[#202328] flex flex-col justify-between">
+            <span className="text-xs uppercase tracking-wider font-semibold text-[#A7ADB5]">Primary Balance</span>
+            <div className="text-2xl font-bold font-mono text-white tracking-tight my-2">
+              12,500 <span className="text-sm font-sans font-normal text-[#1677FF]">MNTA</span>
+            </div>
+            <div className="text-xs font-mono text-[#10B981] pt-2 border-t border-[#202328]">
+              ≈ $60,625.00 USD
+            </div>
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-6 flex flex-col justify-center"
-        >
-          <span className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">Balance</span>
-          <div className="text-3xl font-bold text-white tracking-tight">
-            {isAuditor ? 'Hidden' : '12,500'} <span className="text-lg text-blue-400">{isAuditor ? '' : 'MNT'}</span>
+          <div className="p-5 rounded-xl bg-[#15171A] border border-[#202328] flex flex-col justify-between">
+            <span className="text-xs uppercase tracking-wider font-semibold text-[#A7ADB5]">Associated Tokens</span>
+            <div className="space-y-1.5 my-2 text-xs font-mono">
+              <div className="flex justify-between">
+                <span className="text-[#A7ADB5]">MINT Stablecoin:</span>
+                <span className="text-white font-bold">14,200.00 MINT</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#A7ADB5]">Wrapped BTC:</span>
+                <span className="text-white font-bold">0.50 wBTC</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#A7ADB5]">Bridged USDC:</span>
+                <span className="text-white font-bold">5,000.00 USDC</span>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-[#202328]">
+              <Link to="/tokens" className="text-xs text-[#1677FF] hover:underline">
+                View all token balances &rarr;
+              </Link>
+            </div>
           </div>
-          <div className="mt-4 text-emerald-400 text-sm flex items-center gap-1 font-medium">
-             {!isAuditor && '$45,250.00 USD'}
-          </div>
-        </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-6"
-        >
-          <span className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-4 block">Token Holdings</span>
-          <div className="space-y-3 text-sm text-slate-300">
-            {isAuditor ? (
-              <p className="text-slate-500 text-xs mt-2">Individual holdings hidden for Auditor view.</p>
-            ) : (
-               <>
-                <div className="flex items-center justify-between">
-                  <span>Wrapped BTC</span>
-                  <span className="font-medium text-white">0.5 wBTC</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>USDC</span>
-                  <span className="font-medium text-white">1,200.00 USDC</span>
-                </div>
-               </>
-            )}
+          <div className="p-5 rounded-xl bg-[#15171A] border border-[#202328] flex flex-col justify-between">
+            <span className="text-xs uppercase tracking-wider font-semibold text-[#A7ADB5]">Cumulative Activity</span>
+            <div className="space-y-1.5 my-2 text-xs font-mono">
+              <div className="flex justify-between">
+                <span className="text-[#A7ADB5] flex items-center gap-1"><TrendingUp className="w-3.5 h-3.5 text-[#10B981]" /> Received:</span>
+                <span className="text-white">45,000 MNTA</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#A7ADB5] flex items-center gap-1"><TrendingDown className="w-3.5 h-3.5 text-[#EF4444]" /> Sent:</span>
+                <span className="text-white">32,500 MNTA</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#A7ADB5]">Total Nonce:</span>
+                <span className="text-white font-bold">142 calls</span>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-[#202328] text-xs text-[#A7ADB5] font-mono">
+              Last active 12s ago
+            </div>
           </div>
-        </motion.div>
+        </div>
+      )}
 
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-6 space-y-4"
-        >
-          <span className="text-sm font-medium text-slate-500 uppercase tracking-wider block">Stats</span>
-          <div className="flex items-center justify-between text-sm">
-            <span className="flex items-center gap-2 text-slate-400"><TrendingUp className="w-4 h-4 text-emerald-400" /> Total Received</span>
-            <span className="text-white font-medium">{isAuditor ? 'Aggregated: ~50k MNT' : '45,000 MNT'}</span>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="flex items-center gap-2 text-slate-400"><TrendingDown className="w-4 h-4 text-rose-400" /> Total Sent</span>
-            <span className="text-white font-medium">{isAuditor ? 'Aggregated: ~30k MNT' : '32,500 MNT'}</span>
-          </div>
-        </motion.div>
-      </div>
+      {/* Transaction History Table */}
+      <div className="bg-[#15171A] border border-[#202328] rounded-xl overflow-hidden">
+        <div className="px-5 py-3.5 bg-[#0E1012] border-b border-[#202328] flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-white">Recent Transactions for this Account</h2>
+          <span className="text-xs text-[#A7ADB5] font-mono">Verified Ledger</span>
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-2 bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl overflow-hidden"
-        >
-          <div className="px-6 py-4 border-b border-slate-800 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-white">Transaction History</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-900/50 border-b border-slate-800 text-xs uppercase tracking-wider text-slate-500 font-medium">
-                  <th className="px-6 py-4">Hash</th>
-                  <th className="px-6 py-4">Method</th>
-                  <th className="px-6 py-4">Block</th>
-                  <th className="px-6 py-4">Amount</th>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs border-collapse font-mono">
+            <thead>
+              <tr className="bg-[#0A0C0E] border-b border-[#202328] text-[#A7ADB5] uppercase tracking-wider font-semibold">
+                <th className="px-5 py-3">Tx Hash</th>
+                <th className="px-5 py-3">Method</th>
+                <th className="px-5 py-3">Block</th>
+                <th className="px-5 py-3 text-right">Value</th>
+                <th className="px-5 py-3 text-right">Fee</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#202328]/60">
+              {LATEST_TRANSACTIONS.map((tx, idx) => (
+                <tr key={tx.hash} className="hover:bg-[#191C21] transition-colors">
+                  <td className="px-5 py-3.5">
+                    <Link to={`/transactions/${tx.hash}`} className="text-[#1677FF] hover:underline font-semibold">
+                      {formatHash(tx.hash)}
+                    </Link>
+                  </td>
+
+                  <td className="px-5 py-3.5 font-sans">
+                    <span className="px-2 py-0.5 rounded bg-[#202328] text-[#A7ADB5] text-[11px]">
+                      {idx % 2 === 0 ? 'Transfer' : 'Contract Call'}
+                    </span>
+                  </td>
+
+                  <td className="px-5 py-3.5">
+                    <Link to={`/blocks/${tx.block}`} className="text-[#1677FF] hover:underline">
+                      #{tx.block}
+                    </Link>
+                  </td>
+
+                  <td className="px-5 py-3.5 text-right font-bold text-white">
+                    {isPublic ? '••••••' : (idx % 2 === 0 ? `+${tx.amount}` : `-${tx.amount}`)}
+                  </td>
+
+                  <td className="px-5 py-3.5 text-right text-[#A7ADB5]">
+                    {isPublic ? '•••' : tx.fee}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/50">
-                {LATEST_TRANSACTIONS.map((tx, i) => (
-                  <tr key={tx.hash} className="hover:bg-white/5 transition-colors group">
-                    <td className="px-6 py-4 font-mono text-sm">
-                      <Link to={`/transactions/${tx.hash}`} className="text-blue-400 hover:text-blue-300">
-                        {formatHash(tx.hash)}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="px-2 py-1 rounded bg-slate-800 text-slate-300 text-xs font-medium border border-slate-700">
-                        Transfer
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-blue-400 font-mono hover:underline cursor-pointer">1459{203 - i}</td>
-                    <td className="px-6 py-4 text-sm text-white font-medium">
-                       {isAuditor ? (
-                         <span className="text-slate-500">Aggregated View</span>
-                       ) : (
-                         i % 2 === 0 ? <span className="text-emerald-400">+{tx.amount}</span> : <span className="text-rose-400">-{tx.amount}</span>
-                       )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="bg-slate-900/40 backdrop-blur-md border border-slate-800 rounded-2xl p-6 flex flex-col"
-        >
-          <div className="flex items-center gap-2 mb-6 text-lg font-semibold text-white">
-            <Activity className="w-5 h-5 text-blue-400" />
-            Activity (Last 7 Days)
-          </div>
-          <div className="flex-1 min-h-[200px]">
-             <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={ACTIVITY_DATA} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="day" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '0.5rem' }}
-                    itemStyle={{ color: '#fff' }}
-                  />
-                  <Area type="monotone" dataKey="count" name="Transactions" stroke="#3b82f6" strokeWidth={2} fillOpacity={0.2} fill="#3b82f6" />
-                </AreaChart>
-             </ResponsiveContainer>
-          </div>
-        </motion.div>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
